@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "@uniswap/v3-periphery": "^1.4.3",
-    "ethers": "^6.6.4"
+    "ethers": "^5.7.2"
   }
 }

@@ -16,7 +16,7 @@ const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 INFURA_URL = 'https://mainnet.infura.io/v3/c8418023ffc04115b74fc43f6db57aaa'
 
 
-const provider = new ethers.JsonRpcProvider(INFURA_URL)
+const provider = new ethers.providers.JsonRpcProvider(INFURA_URL)
 const getAbi = address => address === WETH_ADDRESS ? WETHABI : ERC20ABI
 function sqrtToPrice (sqrt, decimals0, decimals1, token0IsInput=true) {
     const numerator = sqrt ** 2
@@ -37,7 +37,7 @@ async function main(tokenIn, tokenOut, fee, amountIn) {
         FactoryABI,
         provider,
     )
-    const poolAddress = factory.getPool(tokenIn, tokenOut, fee)
+    const poolAddress = await factory.getPool(tokenIn, tokenOut, fee)
 
     const poolContract = new ethers.Contract (
         poolAddress,
@@ -72,8 +72,9 @@ async function main(tokenIn, tokenOut, fee, amountIn) {
         tokenOut: tokenOut,
         fee: fee,
         amountIn: amountIn,
-        sortPriceLimitX96: '0',
+        sqrtPriceLimitX96: '0',
     }
+    console.log(params,quoter)
 
     const quote = await quoter.callStatic.quoteExactInputSingle(params)
 
@@ -95,5 +96,5 @@ main(
     WETH_ADDRESS,
     USDC_ADDRESS,
     fee= '3000',
-    ethers.parseEther( ether='100')
+    ethers.utils.parseEther( ether='500')
 )
